@@ -54,37 +54,33 @@
   }
 
   html { scroll-behavior: smooth; font-size: 16px; }
-  body { background: var(--pearl); color: var(--text-dark); font-family: 'Jost', sans-serif; font-weight: 300; overflow-x: hidden; }
+  body { background: var(--pearl); color: var(--text-dark); font-family: 'Jost', sans-serif; font-weight: 300; overflow-x: hidden; width: 100%; max-width: 100vw; }
 
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: var(--navy); }
   ::-webkit-scrollbar-thumb { background: var(--gold); }
 
-  /* ── NAV ── */
+  /* ===================== NAV ===================== */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-    padding: 0 5vw; height: 80px;
+    padding: 0 5vw; height: 70px;
     display: flex; align-items: center; justify-content: space-between;
     transition: background 0.5s, backdrop-filter 0.5s;
   }
   nav.scrolled {
-    background: rgba(13,27,42,0.92);
+    background: rgba(13,27,42,0.95);
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
     border-bottom: 1px solid rgba(196,163,90,0.15);
   }
-  .nav-logo-wrap { display: flex; align-items: center; gap: 0.9rem; }
-  .nav-logo-img {
-    width: 48px; height: 48px; border-radius: 50%;
-    border: 2px solid rgba(196,163,90,0.5);
-    object-fit: cover;
-    background: rgba(196,163,90,0.12);
-    display: flex; align-items: center; justify-content: center;
-    overflow: hidden;
-    flex-shrink: 0;
+  /* Always show solid bg on mobile so content beneath doesn't bleed */
+  @media (max-width: 768px) {
+    nav { background: rgba(13,27,42,0.92); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
   }
+
+  .nav-logo-wrap { display: flex; align-items: center; gap: 0.9rem; }
   .nav-logo-img-placeholder {
-    width: 48px; height: 48px; border-radius: 50%;
+    width: 44px; height: 44px; border-radius: 70%;
     border: 2px solid rgba(196,163,90,0.5);
     background: rgba(196,163,90,0.12);
     display: flex; align-items: center; justify-content: center;
@@ -96,214 +92,254 @@
   .nav-logo { display: flex; flex-direction: column; line-height: 1; }
   .nav-logo-main { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; color: #fff; letter-spacing: 0.1em; text-transform: uppercase; }
   .nav-logo-sub { font-family: 'Jost', sans-serif; font-size: 0.55rem; font-weight: 400; color: var(--gold); letter-spacing: 0.32em; text-transform: uppercase; margin-top: 2px; }
-  .nav-links { display: flex; gap: 2.5rem; list-style: none; align-items: center; }
-  .nav-links a { font-family: 'Jost', sans-serif; font-size: 0.75rem; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.75); text-decoration: none; transition: color 0.3s; }
+
+  /* Desktop nav links */
+  .nav-links {
+    display: flex; gap: 2.5rem; list-style: none; align-items: center;
+  }
+  .nav-links a {
+    font-family: 'Jost', sans-serif; font-size: 0.75rem; font-weight: 400;
+    letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.75);
+    text-decoration: none; transition: color 0.3s;
+  }
   .nav-links a:hover { color: var(--gold-light); }
-  .nav-cta { border: 1px solid var(--gold); color: var(--gold) !important; padding: 0.5rem 1.4rem !important; letter-spacing: 0.12em !important; transition: background 0.3s, color 0.3s !important; }
+  .nav-cta {
+    border: 1px solid var(--gold); color: var(--gold) !important;
+    padding: 0.5rem 1.4rem !important; letter-spacing: 0.12em !important;
+    transition: background 0.3s, color 0.3s !important;
+  }
   .nav-cta:hover { background: var(--gold) !important; color: var(--navy) !important; }
-  .nav-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
-  .nav-toggle span { width: 24px; height: 1px; background: #fff; display: block; transition: transform 0.3s, opacity 0.3s; }
 
-  /* ── HERO ── */
-/* ── HERO — REFINED CSS (replace existing #hero block) ── */
+  /* Hamburger toggle */
+  .nav-toggle {
+    display: none; flex-direction: column; gap: 5px;
+    cursor: pointer; background: none; border: none; padding: 8px;
+    z-index: 1100; position: relative;
+  }
+  .nav-toggle span {
+    width: 24px; height: 1.5px; background: #fff; display: block;
+    transition: transform 0.35s cubic-bezier(0.25,1,0.5,1), opacity 0.3s;
+    transform-origin: center;
+  }
+  .nav-toggle.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .nav-toggle.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .nav-toggle.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
-#hero {
-  position: relative; height: 100vh; min-height: 700px;
-  display: flex; flex-direction: column;
-  justify-content: flex-end; align-items: center;
-  overflow: hidden; background: var(--navy);
-  padding-bottom: 1.0vh;
-}
-.hero-actions{
-    display:none !important;
-}
-.hero-bg {
-  position: absolute; inset: 0;
-  background: linear-gradient(
-      to bottom,
-      rgba(13,27,42,0.08) 0%,
-      rgba(13,27,42,0.10) 35%,
-      rgba(13,27,42,0.55) 62%,
-      rgba(13,27,42,0.82) 100%
-    ),
-    url('ro.png') center/cover no-repeat;
-  transform: scale(1.08); transition: transform 8s ease;
-}
-#hero.loaded .hero-bg { transform: scale(1); }
+  /* Mobile nav drawer */
+  @media (max-width: 768px) {
+    .nav-links {
+      display: flex; flex-direction: column;
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(10,22,35,0.99);
+      padding: 100px 5vw 3rem;
+      gap: 0;
+      z-index: 1050;
+      transform: translateX(100%);
+      transition: transform 0.4s cubic-bezier(0.25,1,0.5,1);
+      overflow-y: auto;
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
+    .nav-links.open {
+      transform: translateX(0);
+    }
+    .nav-links li {
+      width: 100%;
+      border-bottom: 1px solid rgba(196,163,90,0.12);
+    }
+    .nav-links li:first-child {
+      border-top: 1px solid rgba(196,163,90,0.12);
+    }
+    .nav-links a {
+      display: block;
+      padding: 1.1rem 0.5rem;
+      font-size: 1rem;
+      letter-spacing: 0.12em;
+      color: rgba(255,255,255,0.85);
+    }
+    .nav-cta {
+      border: none !important;
+      padding: 1.1rem 0.5rem !important;
+      color: var(--gold) !important;
+    }
+    .nav-toggle { display: flex; }
+  }
 
-/* eyebrow */
-.hero-eyebrow {
-  position: relative; z-index: 2;
-  display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;
-  opacity: 0; transform: translateY(20px);
-  transition: opacity 1s 0.3s, transform 1s 0.3s;
-}
-#hero.loaded .hero-eyebrow { opacity: 1; transform: translateY(0); }
-.hero-eyebrow-line { width: 32px; height: 1px; background: var(--gold); }
-.hero-eyebrow-text {
-  font-family: 'Jost', sans-serif; font-size: 0.6rem;
-  font-weight: 500; letter-spacing: 0.38em; text-transform: uppercase;
-  color: var(--gold-light);
-}
+  /* ===================== HERO ===================== */
+  #hero {
+    position: relative; height: 100svh; min-height: 600px;
+    display: flex; flex-direction: column;
+    justify-content: flex-end; align-items: center;
+    overflow: hidden; background: var(--navy);
+    padding-bottom: 2.5vh;
+    padding-left: 4vw; padding-right: 4vw;
+  }
+  .hero-actions { display: none !important; }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(13,27,42,0.08) 0%,
+        rgba(13,27,42,0.10) 35%,
+        rgba(13,27,42,0.55) 62%,
+        rgba(13,27,42,0.82) 100%
+      ),
+      url('ro.png') center/cover no-repeat;
+    transform: scale(1.08); transition: transform 8s ease;
+  }
+  #hero.loaded .hero-bg { transform: scale(1); }
 
-/* headline — smaller, tighter, centred below the faces */
-.hero-headline {
-  position: relative; z-index: 2; text-align: center;
-  font-family: 'Cormorant Garamond', serif; font-weight: 600;
-  font-size: clamp(1.9rem, 4.2vw, 4.6rem);
-  line-height: 1.12; color: #fff;
-  max-width: 600px; letter-spacing: -0.01em;
-  opacity: 0; transform: translateY(30px);
-  transition: opacity 1.2s 0.5s, transform 1.2s 0.5s;
-  text-shadow: 0 2px 24px rgba(13,27,42,0.55);
-}
-#hero.loaded .hero-headline { opacity: 1; transform: translateY(0); }
-.hero-headline em { font-style: italic; color: var(--gold-pale); }
+  .hero-eyebrow {
+    position: relative; z-index: 2;
+    display: flex; align-items: center; gap: 0.7rem; margin-bottom: 0.8rem;
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 1s 0.3s, transform 1s 0.3s;
+    text-align: center;
+  }
+  #hero.loaded .hero-eyebrow { opacity: 1; transform: translateY(0); }
+  .hero-eyebrow-line { width: 24px; height: 1px; background: var(--gold); flex-shrink: 0; }
+  .hero-eyebrow-text {
+    font-family: 'Jost', sans-serif; font-size: 0.58rem;
+    font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--gold-light);
+  }
 
-/* subtext */
-.hero-subtext {
-  position: relative; z-index: 2; margin-top: 0.9rem;
-  font-family: 'Jost', sans-serif; font-size: 0.78rem;
-  letter-spacing: 0.12em; color: rgba(255,255,255,0.65);
-  opacity: 0; transform: translateY(20px);
-  transition: opacity 1s 0.9s, transform 1s 0.9s;
-}
-#hero.loaded .hero-subtext { opacity: 1; transform: translateY(0); }
+  .hero-headline {
+    position: relative; z-index: 2; text-align: center;
+    font-family: 'Cormorant Garamond', serif; font-weight: 600;
+    font-size: clamp(1.9rem, 4.2vw, 4.6rem);
+    line-height: 1.12; color: #fff;
+    max-width: 600px; letter-spacing: -0.01em;
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 1.2s 0.5s, transform 1.2s 0.5s;
+    text-shadow: 0 2px 24px rgba(13,27,42,0.55);
+    word-break: break-word;
+  }
+  #hero.loaded .hero-headline { opacity: 1; transform: translateY(0); }
+  .hero-headline em { font-style: italic; color: var(--gold-pale); }
 
-/* CTA row */
-.hero-actions {
-  position: relative; z-index: 2;
-  display: flex; gap: 1rem; margin-top: 1.6rem;
-  opacity: 0; transform: translateY(20px);
-  transition: opacity 1s 1.1s, transform 1s 1.1s;
-}
-#hero.loaded .hero-actions { opacity: 1; transform: translateY(0); }
+  .hero-subtext {
+    position: relative; z-index: 2; margin-top: 0.7rem;
+    font-family: 'Jost', sans-serif; font-size: 0.72rem;
+    letter-spacing: 0.1em; color: rgba(255,255,255,0.65);
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 1s 0.9s, transform 1s 0.9s;
+    text-align: center;
+  }
+  #hero.loaded .hero-subtext { opacity: 1; transform: translateY(0); }
 
-.btn-primary {
-  background: var(--gold); color: var(--navy); border: none;
-  padding: 0.85rem 2.4rem; font-family: 'Jost', sans-serif;
-  font-size: 0.68rem; font-weight: 500; letter-spacing: 0.22em;
-  text-transform: uppercase; cursor: pointer; text-decoration: none;
-  transition: background 0.3s, transform 0.25s, box-shadow 0.25s;
-  display: inline-block; box-shadow: 0 6px 28px rgba(196,163,90,0.28);
-}
-.btn-primary:hover {
-  background: var(--gold-light); transform: translateY(-3px);
-  box-shadow: 0 12px 36px rgba(196,163,90,0.38);
-}
-.btn-ghost {
-  background: transparent; color: #fff;
-  border: 1px solid rgba(255,255,255,0.45);
-  padding: 0.85rem 2.4rem; font-family: 'Jost', sans-serif;
-  font-size: 0.68rem; font-weight: 400; letter-spacing: 0.22em;
-  text-transform: uppercase; cursor: pointer; text-decoration: none;
-  transition: border-color 0.3s, color 0.3s, background 0.3s, transform 0.25s;
-  display: inline-block;
-}
-.btn-ghost:hover {
-  border-color: var(--gold); color: var(--gold);
-  background: rgba(196,163,90,0.06); transform: translateY(-3px);
-}
+  .btn-primary {
+    background: var(--gold); color: var(--navy); border: none;
+    padding: 0.85rem 2.4rem; font-family: 'Jost', sans-serif;
+    font-size: 0.68rem; font-weight: 500; letter-spacing: 0.22em;
+    text-transform: uppercase; cursor: pointer; text-decoration: none;
+    transition: background 0.3s, transform 0.25s, box-shadow 0.25s;
+    display: inline-block; box-shadow: 0 6px 28px rgba(196,163,90,0.28);
+  }
+  .btn-primary:hover {
+    background: var(--gold-light); transform: translateY(-3px);
+    box-shadow: 0 12px 36px rgba(196,163,90,0.38);
+  }
+  .btn-ghost {
+    background: transparent; color: #fff;
+    border: 1px solid rgba(255,255,255,0.45);
+    padding: 0.85rem 2.4rem; font-family: 'Jost', sans-serif;
+    font-size: 0.68rem; font-weight: 400; letter-spacing: 0.22em;
+    text-transform: uppercase; cursor: pointer; text-decoration: none;
+    transition: border-color 0.3s, color 0.3s, background 0.3s, transform 0.25s;
+    display: inline-block;
+  }
+  .btn-ghost:hover {
+    border-color: var(--gold); color: var(--gold);
+    background: rgba(196,163,90,0.06); transform: translateY(-3px);
+  }
 
-/* glass panels */
-.hero-panels {
-  position: relative; z-index: 3;
-  display: flex; justify-content: center; gap: 1rem;
-  padding: 0; margin-top: 5rem; flex-wrap: wrap;
-  opacity: 0; transform: translateY(25px);
-  transition: opacity 1.2s 1.4s, transform 1.2s 1.4s;
-}
-#hero.loaded .hero-panels { opacity: 1; transform: translateY(0); }
+  .hero-panels {
+    position: relative; z-index: 3;
+    display: flex; justify-content: center; gap: 0.8rem;
+    padding: 0; margin-top: 2.5rem; flex-wrap: wrap;
+    opacity: 0; transform: translateY(25px);
+    transition: opacity 1.2s 1.4s, transform 1.2s 1.4s;
+    width: 100%;
+  }
+  #hero.loaded .hero-panels { opacity: 1; transform: translateY(0); }
 
-.glass-panel {
-  background: rgba(13,27,42,0.45);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(196,163,90,0.30);
-  padding: 0.9rem 1.5rem; min-width: 170px;
-  transition: background 0.35s, border-color 0.35s, transform 0.35s;
-  display: flex; flex-direction: column; justify-content: center;
-}
-.glass-panel:hover {
-  background: rgba(13,27,42,0.62);
-  border-color: rgba(196,163,90,0.55);
-  transform: translateY(-3px);
-}
-.glass-panel-label {
-  font-size: 0.52rem; letter-spacing: 0.32em; text-transform: uppercase;
-  color: var(--gold); margin-bottom: 0.28rem;
-}
-.glass-panel-value {
-  font-family: 'Cormorant Garamond', serif; font-size: 1rem;
-  font-weight: 500; color: #fff;
-}
+  .glass-panel {
+    background: rgba(13,27,42,0.45);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(196,163,90,0.30);
+    padding: 0.75rem 1.2rem; min-width: 140px;
+    transition: background 0.35s, border-color 0.35s, transform 0.35s;
+    display: flex; flex-direction: column; justify-content: center;
+    flex: 1 1 auto;
+    max-width: 200px;
+  }
+  .glass-panel:hover {
+    background: rgba(13,27,42,0.62);
+    border-color: rgba(196,163,90,0.55);
+    transform: translateY(-3px);
+  }
+  .glass-panel-label {
+    font-size: 0.5rem; letter-spacing: 0.28em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 0.25rem;
+  }
+  .glass-panel-value {
+    font-family: 'Cormorant Garamond', serif; font-size: 0.95rem;
+    font-weight: 500; color: #fff;
+  }
 
-/* nav — tighter glass blur */
-nav.scrolled {
-  background: rgba(13,27,42,0.88);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border-bottom: 1px solid rgba(196,163,90,0.14);
-}
-
-/* responsive */
-@media (max-width: 768px) {
-  #hero { padding-bottom: 5vh; }
-  .hero-headline { font-size: clamp(1.7rem, 6vw, 2.6rem); max-width: 92vw; }
-  .hero-panels { gap: 0.6rem; }
-  .glass-panel { min-width: 140px; padding: 0.75rem 1rem; }
-}
-@media (max-width: 480px) {
-  .hero-panels { flex-direction: column; align-items: center; }
-  .glass-panel { width: 240px; }
-  .hero-headline { font-size: 1.7rem; }
-}
-  /* ── MARQUEE ── */
+  /* ===================== MARQUEE ===================== */
   .marquee-strip { background: var(--gold); padding: 0.75rem 0; overflow: hidden; white-space: nowrap; }
   .marquee-inner { display: inline-block; animation: marquee 30s linear infinite; }
-  .marquee-inner span { font-family: 'Jost', sans-serif; font-size: 0.62rem; font-weight: 500; letter-spacing: 0.28em; text-transform: uppercase; color: var(--navy); padding: 0 3rem; }
-  .marquee-inner span::before { content: '◆'; margin-right: 3rem; opacity: 0.5; }
+  .marquee-inner span { font-family: 'Jost', sans-serif; font-size: 0.62rem; font-weight: 500; letter-spacing: 0.28em; text-transform: uppercase; color: var(--navy); padding: 0 2.5rem; }
+  .marquee-inner span::before { content: '◆'; margin-right: 2.5rem; opacity: 0.5; }
   @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-  section { overflow: hidden; }
+  section { overflow: hidden; width: 100%; max-width: 100vw; }
   .section-eyebrow { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1.2rem; }
-  .section-eyebrow-line { width: 28px; height: 1px; background: var(--gold); }
+  .section-eyebrow-line { width: 28px; height: 1px; background: var(--gold); flex-shrink: 0; }
   .section-eyebrow-text { font-size: 0.6rem; font-weight: 500; letter-spacing: 0.38em; text-transform: uppercase; color: var(--gold); }
 
-  /* ── COURSES ── */
-  #courses { background: var(--warm-white); padding: 8rem 5vw; }
-  .courses-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 4rem; }
+  /* ===================== COURSES ===================== */
+  #courses { background: var(--warm-white); padding: 7rem 5vw 6rem; }
+  .courses-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3.5rem; }
   .courses-heading { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: clamp(2.2rem, 4vw, 4.2rem); line-height: 1.1; color: var(--navy); max-width: 480px; }
   .courses-heading em { font-style: italic; color: var(--gold); }
   .courses-count { font-family: 'Cormorant Garamond', serif; font-size: 4rem; font-weight: 300; color: var(--neutral-200); line-height: 1; }
-  .courses-track-wrap { position: relative; overflow: hidden; }
-  .courses-track { display: flex; gap: 1.5rem; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
+
+  .courses-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
   .course-card {
-    flex: 0 0 calc(33.33% - 1rem); min-width: 300px; position: relative;
+    position: relative;
     overflow: hidden; cursor: pointer; background: var(--navy);
   }
-  .course-card-img { width: 100%; height: 380px; object-fit: cover; display: block; transition: transform 0.7s ease, filter 0.7s ease; filter: brightness(0.7); loading: lazy; }
+  .course-card-img {
+    width: 100%; height: 320px; object-fit: cover; display: block;
+    transition: transform 0.7s ease, filter 0.7s ease; filter: brightness(0.7);
+  }
   .course-card:hover .course-card-img { transform: scale(1.06); filter: brightness(0.5); }
   .course-card-body {
-    position: absolute; bottom: 0; left: 0; right: 0; padding: 2rem;
-    background: linear-gradient(to top, rgba(13,27,42,0.95) 0%, transparent 100%);
+    position: absolute; bottom: 0; left: 0; right: 0; padding: 1.5rem;
+    background: linear-gradient(to top, rgba(13,27,42,0.97) 0%, rgba(13,27,42,0.3) 80%, transparent 100%);
     transform: translateY(1.5rem); transition: transform 0.5s ease;
   }
   .course-card:hover .course-card-body { transform: translateY(0); }
-  .course-card-tag { font-size: 0.58rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.6rem; }
-  .course-card-title { font-family: 'Cormorant Garamond', serif; font-size: 1.55rem; font-weight: 600; color: #fff; line-height: 1.2; margin-bottom: 0.5rem; }
-  .course-card-duration { font-size: 0.68rem; color: var(--gold-pale); letter-spacing: 0.15em; margin-bottom: 0.6rem; }
-  .course-card-desc { font-size: 0.78rem; color: rgba(255,255,255,0.65); line-height: 1.7; opacity: 0; transform: translateY(8px); transition: opacity 0.5s 0.1s, transform 0.5s 0.1s; }
+  .course-card-tag { font-size: 0.55rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+  .course-card-title { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 600; color: #fff; line-height: 1.2; margin-bottom: 0.4rem; }
+  .course-card-duration { font-size: 0.65rem; color: var(--gold-pale); letter-spacing: 0.12em; margin-bottom: 0.5rem; }
+  .course-card-desc { font-size: 0.76rem; color: rgba(255,255,255,0.65); line-height: 1.7; opacity: 0; transform: translateY(8px); transition: opacity 0.5s 0.1s, transform 0.5s 0.1s; }
   .course-card:hover .course-card-desc { opacity: 1; transform: translateY(0); }
-  .course-card-arrow { margin-top: 1rem; font-size: 0.65rem; letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase; opacity: 0; transition: opacity 0.4s 0.2s; }
+  .course-card-arrow { margin-top: 0.8rem; font-size: 0.62rem; letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase; opacity: 0; transition: opacity 0.4s 0.2s; }
   .course-card:hover .course-card-arrow { opacity: 1; }
-  .courses-nav { display: flex; gap: 0.8rem; margin-top: 2.5rem; }
-  .courses-btn { width: 48px; height: 48px; border: 1px solid var(--neutral-200); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: var(--navy); transition: background 0.3s, border-color 0.3s, color 0.3s; }
-  .courses-btn:hover { background: var(--navy); border-color: var(--navy); color: #fff; }
 
-  /* ── CERTIFICATION ── */
-  #certification { background: var(--navy); padding: 8rem 5vw; }
-  .cert-header { text-align: center; margin-bottom: 5rem; }
+  /* ===================== CERTIFICATION ===================== */
+  #certification { background: var(--navy); padding: 7rem 5vw; }
+  .cert-header { text-align: center; margin-bottom: 4rem; }
   .cert-heading { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 3.8vw, 3.8rem); font-weight: 600; color: #fff; margin-bottom: 0.8rem; }
   .cert-sub { font-size: 0.82rem; color: rgba(255,255,255,0.45); max-width: 540px; margin: 0 auto; line-height: 1.8; }
   .cert-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
@@ -318,10 +354,9 @@ nav.scrolled {
   .cert-desc { font-size: 0.78rem; color: rgba(255,255,255,0.45); line-height: 1.8; }
   .cert-badge { display: inline-block; margin-top: 1rem; padding: 0.3rem 1rem; border: 1px solid rgba(196,163,90,0.35); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); }
 
-  /* ── ADD-ON CERTIFICATIONS ── */
-  #addons { background: var(--pearl); padding: 8rem 5vw; }
+  /* ===================== ADD-ON ===================== */
+  #addons { background: var(--pearl); padding: 7rem 5vw; }
   .addons-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 6vw; align-items: center; }
-  .addons-content {}
   .addons-heading { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 3.5vw, 3.5rem); font-weight: 600; color: var(--navy); margin: 1.2rem 0 1.5rem; line-height: 1.1; }
   .addons-heading em { font-style: italic; color: var(--gold); }
   .addons-body { font-size: 0.85rem; line-height: 1.9; color: var(--neutral-600); margin-bottom: 2rem; }
@@ -330,7 +365,7 @@ nav.scrolled {
   .addons-list-num { width: 36px; height: 36px; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-weight: 600; color: var(--gold); flex-shrink: 0; }
   .addons-list-text { font-size: 0.85rem; color: var(--navy); font-weight: 400; }
   .addons-visual { position: relative; }
-  .addons-img { width: 100%; height: 480px; object-fit: cover; loading: lazy; }
+  .addons-img { width: 100%; height: 480px; object-fit: cover; display: block; }
   .addons-overlay {
     position: absolute; bottom: 2rem; left: -2rem;
     background: var(--gold); padding: 1.5rem 2rem;
@@ -339,14 +374,14 @@ nav.scrolled {
   .addons-overlay-num { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 600; color: var(--navy); line-height: 1; }
   .addons-overlay-label { font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--navy); opacity: 0.7; margin-top: 2px; }
 
-  /* ── ABOUT ── */
+  /* ===================== ABOUT ===================== */
   #about {
-    background: var(--navy); padding: 8rem 5vw;
+    background: var(--navy); padding: 7rem 5vw;
     display: grid; grid-template-columns: 1fr 1fr; gap: 6vw; align-items: center;
   }
   .about-visual { position: relative; height: 580px; }
-  .about-img-main { width: 72%; height: 78%; object-fit: cover; position: absolute; top: 0; left: 0; loading: lazy; }
-  .about-img-accent { width: 52%; height: 52%; object-fit: cover; position: absolute; bottom: 0; right: 0; border: 4px solid var(--navy); loading: lazy; }
+  .about-img-main { width: 72%; height: 78%; object-fit: cover; position: absolute; top: 0; left: 0; }
+  .about-img-accent { width: 52%; height: 52%; object-fit: cover; position: absolute; bottom: 0; right: 0; border: 4px solid var(--navy); }
   .about-year-badge {
     position: absolute; top: 42%; left: 60%; width: 90px; height: 90px;
     background: var(--gold); display: flex; flex-direction: column;
@@ -358,13 +393,13 @@ nav.scrolled {
   .about-quote { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.8rem, 3.2vw, 3.4rem); font-weight: 600; line-height: 1.15; margin: 1.5rem 0; color: #fff; }
   .about-quote em { font-style: italic; color: var(--gold-pale); }
   .about-body { font-size: 0.85rem; line-height: 1.9; color: rgba(255,255,255,0.6); max-width: 440px; margin-bottom: 2rem; }
-  .about-stats { display: flex; gap: 3rem; margin-top: 2.5rem; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 2rem; }
+  .about-stats { display: flex; gap: 3rem; margin-top: 2.5rem; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 2rem; flex-wrap: wrap; }
   .about-stat-num { font-family: 'Cormorant Garamond', serif; font-size: 2.6rem; font-weight: 600; color: var(--gold); line-height: 1; }
   .about-stat-label { font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-top: 4px; }
 
-  /* ── ELIGIBILITY ── */
-  #eligibility { background: var(--warm-white); padding: 8rem 5vw; }
-  .eligibility-header { text-align: center; max-width: 580px; margin: 0 auto 5rem; }
+  /* ===================== ELIGIBILITY ===================== */
+  #eligibility { background: var(--warm-white); padding: 7rem 5vw; }
+  .eligibility-header { text-align: center; max-width: 580px; margin: 0 auto 4rem; }
   .eligibility-heading { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 3.8vw, 3.8rem); font-weight: 600; color: var(--navy); line-height: 1.1; }
   .eligibility-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; max-width: 900px; margin: 0 auto; }
   .eligibility-card {
@@ -377,9 +412,9 @@ nav.scrolled {
   .eligibility-title { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; color: var(--navy); margin-bottom: 0.5rem; }
   .eligibility-desc { font-size: 0.78rem; line-height: 1.8; color: var(--neutral-600); }
 
-  /* ── WHY CHOOSE ── */
-  #why { background: var(--pearl); padding: 8rem 5vw; }
-  .why-header { text-align: center; max-width: 580px; margin: 0 auto 6rem; }
+  /* ===================== WHY ===================== */
+  #why { background: var(--pearl); padding: 7rem 5vw; }
+  .why-header { text-align: center; max-width: 580px; margin: 0 auto 5rem; }
   .why-heading { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 3.8vw, 3.8rem); font-weight: 600; color: var(--navy); line-height: 1.1; }
   .why-timeline { position: relative; max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr 80px 1fr; gap: 0; }
   .timeline-line { grid-column: 2; grid-row: 1 / 5; display: flex; flex-direction: column; align-items: center; padding-top: 1.5rem; }
@@ -393,86 +428,179 @@ nav.scrolled {
   .why-item-desc { font-size: 0.8rem; line-height: 1.8; color: var(--neutral-600); max-width: 280px; }
   .why-item-left .why-item-desc { margin-left: auto; }
 
-  /* ── PLACEMENT ── */
-  #placement { background: var(--navy); padding: 8rem 5vw; }
+  /* ===================== PLACEMENT ===================== */
+  #placement { background: var(--navy); padding: 7rem 5vw; }
   .placement-header { text-align: center; margin-bottom: 4rem; }
   .placement-heading { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 3.8vw, 3.8rem); font-weight: 600; color: #fff; margin-bottom: 1rem; }
   .placement-sub { font-size: 0.82rem; color: rgba(255,255,255,0.45); max-width: 580px; margin: 0 auto; line-height: 1.8; }
-  .placement-logos { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.2rem; margin-bottom: 3rem; }
+  .placement-logos {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.2rem;
+    margin-bottom: 3rem;
+  }
   .placement-logo-cell {
-    background: rgba(255,255,255,0.06); border: 1px solid rgba(196,163,90,0.15);
-    height: 90px; display: flex; align-items: center; justify-content: center;
-    padding: 1rem; transition: background 0.3s, border-color 0.3s;
-    cursor: default;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(196,163,90,0.15);
+    height: 90px;
+    display: flex; align-items: center; justify-content: center;
+    padding: 1rem;
+    transition: background 0.3s, border-color 0.3s;
+    cursor: default; overflow: hidden; position: relative;
   }
   .placement-logo-cell:hover { background: rgba(255,255,255,0.1); border-color: rgba(196,163,90,0.4); }
-  .placement-logo-cell img { max-width: 100%; max-height: 56px; object-fit: contain; filter: brightness(0) invert(1) opacity(0.75); transition: opacity 0.3s; }
-  .placement-logo-cell:hover img { opacity: 1; }
+  .placement-logo-cell img {
+    width: 100%; height: 100%; object-fit: contain; display: block;
+    filter: brightness(0) invert(1) opacity(0.8); transition: filter 0.3s;
+  }
+  .placement-logo-cell:hover img { filter: brightness(0) invert(1) opacity(1); }
+  .placement-logo-cell img.img-error { display: none; }
+  .logo-placeholder {
+    display: none; position: absolute; inset: 0;
+    align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.72rem; font-weight: 600;
+    color: rgba(255,255,255,0.35); text-align: center;
+    padding: 0.5rem; line-height: 1.4; letter-spacing: 0.03em;
+  }
   .placement-note { text-align: center; padding: 1.5rem 2rem; border: 1px solid rgba(196,163,90,0.2); max-width: 640px; margin: 0 auto; }
   .placement-note-text { font-size: 0.82rem; color: rgba(255,255,255,0.55); line-height: 1.8; }
   .placement-note-text strong { color: var(--gold-light); font-weight: 400; }
-  .placement-stat { display: flex; justify-content: center; gap: 5rem; margin-top: 4rem; padding-top: 3rem; border-top: 1px solid rgba(255,255,255,0.06); }
+  .placement-stat { display: flex; justify-content: center; gap: 5rem; margin-top: 4rem; padding-top: 3rem; border-top: 1px solid rgba(255,255,255,0.06); flex-wrap: wrap; }
   .placement-stat-num { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 600; color: var(--gold); line-height: 1; }
   .placement-stat-label { font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-top: 6px; }
   .placement-stat-item { text-align: center; }
 
-  /* ── GALLERY ── */
-  #gallery { background: var(--warm-white); padding: 8rem 5vw; }
-  .gallery-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; }
+  /* ===================== GALLERY ===================== */
+  #gallery { background: var(--warm-white); padding: 7rem 5vw; }
+  .gallery-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; flex-wrap: wrap; gap: 1.2rem; }
   .gallery-heading { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 3.5vw, 3.5rem); font-weight: 600; color: var(--navy); line-height: 1.1; }
   .gallery-filters { display: flex; gap: 0.6rem; flex-wrap: wrap; }
-  .filter-btn { border: 1px solid var(--neutral-200); background: transparent; padding: 0.4rem 1rem; font-family: 'Jost', sans-serif; font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; color: var(--neutral-600); transition: all 0.3s; }
+  .filter-btn { border: 1px solid var(--neutral-200); background: transparent; padding: 0.45rem 1rem; font-family: 'Jost', sans-serif; font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; color: var(--neutral-600); transition: all 0.3s; }
   .filter-btn.active, .filter-btn:hover { background: var(--navy); border-color: var(--navy); color: #fff; }
   .masonry-grid { column-count: 3; column-gap: 12px; }
   .masonry-item { break-inside: avoid; margin-bottom: 12px; position: relative; overflow: hidden; cursor: pointer; display: block; }
-  .masonry-item img { width: 100%; display: block; transition: transform 0.6s ease, filter 0.6s ease; filter: brightness(0.88); loading: lazy; }
+  .masonry-item img { width: 100%; display: block; transition: transform 0.6s ease, filter 0.6s ease; filter: brightness(0.88); }
   .masonry-item:hover img { transform: scale(1.04); filter: brightness(0.65); }
   .masonry-hover { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.4s; background: rgba(13,27,42,0.3); }
   .masonry-item:hover .masonry-hover { opacity: 1; }
   .masonry-hover-icon { width: 42px; height: 42px; border: 1px solid rgba(255,255,255,0.6); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.2rem; }
-  #lightbox { display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(13,27,42,0.96); align-items: center; justify-content: center; }
-  #lightbox.open { display: flex; }
-  #lightbox img { max-width: 90vw; max-height: 88vh; object-fit: contain; }
-  .lightbox-close { position: absolute; top: 1.5rem; right: 2rem; font-size: 1.8rem; color: rgba(255,255,255,0.6); cursor: pointer; background: none; border: none; transition: color 0.3s; }
-  .lightbox-close:hover { color: var(--gold); }
 
-  /* ── TESTIMONIALS ── */
-  #testimonials { background: var(--navy); padding: 8rem 5vw; overflow: hidden; }
-  .testimonials-header { text-align: center; margin-bottom: 5rem; }
+  /* ===================== LIGHTBOX ===================== */
+  #lightbox {
+    display: none;
+    position: fixed; inset: 0; z-index: 9999;
+    align-items: center; justify-content: center;
+  }
+  #lightbox.open {
+    display: flex;
+    background: rgba(8,16,26,0.96);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    animation: lbFadeIn 0.35s ease forwards;
+  }
+  @keyframes lbFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .lightbox-inner {
+    position: relative; display: flex;
+    align-items: center; justify-content: center;
+    max-width: 90vw; max-height: 85vh;
+    /* swipe area */
+    touch-action: pan-y;
+  }
+
+  #lightboxImg {
+    max-width: 86vw; max-height: 80vh;
+    object-fit: contain;
+    border: 1px solid rgba(196,163,90,0.25);
+    box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(196,163,90,0.1);
+    opacity: 0; transform: scale(0.88);
+    transition: opacity 0.4s cubic-bezier(0.25,1,0.5,1), transform 0.4s cubic-bezier(0.25,1,0.5,1);
+    display: block; pointer-events: none;
+    user-select: none;
+  }
+  #lightbox.open #lightboxImg.lb-visible {
+    opacity: 1; transform: scale(1);
+  }
+
+  .lightbox-close {
+    position: fixed; top: 1.2rem; right: 1.2rem;
+    width: 46px; height: 46px;
+    border: 1px solid rgba(196,163,90,0.35);
+    background: rgba(13,27,42,0.85);
+    color: rgba(255,255,255,0.75);
+    font-size: 1.5rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.3s, color 0.3s;
+    z-index: 10002; line-height: 1;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    touch-action: manipulation;
+  }
+  .lightbox-close:hover { border-color: var(--gold); color: var(--gold); }
+
+  .lightbox-prev, .lightbox-next {
+    position: fixed; top: 50%; transform: translateY(-50%);
+    width: 48px; height: 48px;
+    border: 1px solid rgba(196,163,90,0.3);
+    background: rgba(13,27,42,0.7);
+    color: rgba(255,255,255,0.8); font-size: 1.2rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.3s, color 0.3s;
+    z-index: 10001; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    touch-action: manipulation;
+  }
+  .lightbox-prev { left: 0.8rem; }
+  .lightbox-next { right: 0.8rem; }
+  .lightbox-prev:hover, .lightbox-next:hover { border-color: var(--gold); color: var(--gold); }
+
+  .lightbox-counter {
+    position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+    font-family: 'Jost', sans-serif; font-size: 0.6rem; letter-spacing: 0.3em;
+    color: rgba(255,255,255,0.35); text-transform: uppercase;
+    z-index: 10001; white-space: nowrap;
+  }
+
+  /* ===================== TESTIMONIALS ===================== */
+  #testimonials { background: var(--navy); padding: 7rem 5vw; overflow: hidden; }
+  .testimonials-header { text-align: center; margin-bottom: 4rem; }
   .testimonials-heading { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 3.5vw, 3.5rem); font-weight: 600; color: #fff; }
   .testi-slider { position: relative; overflow: hidden; }
   .testi-track { display: flex; transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1); }
-  .testi-card { flex: 0 0 100%; padding: 0 10vw; text-align: center; }
-  .testi-quote-mark { font-family: 'Cormorant Garamond', serif; font-size: 6rem; font-weight: 300; color: rgba(196,163,90,0.2); line-height: 0.5; margin-bottom: 2rem; display: block; }
-  .testi-text { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.2rem, 2.2vw, 2rem); font-weight: 400; font-style: italic; color: rgba(255,255,255,0.85); line-height: 1.7; max-width: 700px; margin: 0 auto 2.5rem; }
+  .testi-card { flex: 0 0 100%; padding: 0 8vw; text-align: center; }
+  .testi-quote-mark { font-family: 'Cormorant Garamond', serif; font-size: 5rem; font-weight: 300; color: rgba(196,163,90,0.2); line-height: 0.5; margin-bottom: 1.5rem; display: block; }
+  .testi-text { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.1rem, 2.2vw, 2rem); font-weight: 400; font-style: italic; color: rgba(255,255,255,0.85); line-height: 1.7; max-width: 700px; margin: 0 auto 2rem; }
   .testi-author { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); }
   .testi-role { font-size: 0.65rem; color: rgba(255,255,255,0.35); margin-top: 0.3rem; letter-spacing: 0.1em; }
-  .testi-dots { display: flex; justify-content: center; gap: 0.6rem; margin-top: 3rem; }
-  .testi-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.2); cursor: pointer; transition: background 0.3s, transform 0.3s; border: none; }
+  .testi-dots { display: flex; justify-content: center; gap: 0.6rem; margin-top: 2.5rem; }
+  .testi-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.2); cursor: pointer; transition: background 0.3s, transform 0.3s; border: none; padding: 0; }
   .testi-dot.active { background: var(--gold); transform: scale(1.4); }
 
-  /* ── CONTACT ── */
-  #contact { background: var(--warm-white); padding: 8rem 5vw; }
+  /* ===================== CONTACT ===================== */
+  #contact { background: var(--warm-white); padding: 7rem 5vw; }
   .contact-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 6vw; align-items: start; }
   .contact-heading { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 3.5vw, 3.4rem); font-weight: 600; color: var(--navy); margin-bottom: 1.5rem; line-height: 1.1; }
-  .contact-body { font-size: 0.82rem; line-height: 1.9; color: var(--neutral-600); margin-bottom: 3rem; }
-  .contact-details { display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 3rem; }
+  .contact-body { font-size: 0.82rem; line-height: 1.9; color: var(--neutral-600); margin-bottom: 2.5rem; }
+  .contact-details { display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 2.5rem; }
   .contact-detail-label { font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.3rem; }
   .contact-detail-value { font-size: 0.9rem; color: var(--navy); font-weight: 400; line-height: 1.6; }
   .contact-detail-value a { color: var(--navy); text-decoration: none; transition: color 0.3s; }
   .contact-detail-value a:hover { color: var(--gold); }
   .map-embed { border: 0; width: 100%; height: 220px; display: block; margin-top: 1.5rem; filter: grayscale(30%); }
-  .contact-form-wrap { background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); border: 1px solid var(--neutral-100); padding: 3rem; box-shadow: 0 30px 80px rgba(13,27,42,0.06); }
+  .contact-form-wrap { background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); border: 1px solid var(--neutral-100); padding: 2.5rem; box-shadow: 0 30px 80px rgba(13,27,42,0.06); }
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
-  .form-group { margin-bottom: 1.5rem; }
+  .form-group { margin-bottom: 1.4rem; }
   .form-group label { display: block; font-size: 0.58rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--neutral-600); margin-bottom: 0.5rem; }
-  .form-group input, .form-group select, .form-group textarea { width: 100%; border: none; border-bottom: 1px solid var(--neutral-200); background: transparent; padding: 0.6rem 0; font-family: 'Jost', sans-serif; font-size: 0.85rem; color: var(--navy); outline: none; transition: border-color 0.3s; appearance: none; }
+  .form-group input, .form-group select, .form-group textarea { width: 100%; border: none; border-bottom: 1px solid var(--neutral-200); background: transparent; padding: 0.6rem 0; font-family: 'Jost', sans-serif; font-size: 0.85rem; color: var(--navy); outline: none; transition: border-color 0.3s; appearance: none; -webkit-appearance: none; }
   .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--gold); }
   .form-group textarea { resize: none; height: 80px; }
-  .form-submit { width: 100%; background: var(--navy); color: #fff; border: none; padding: 1rem; font-family: 'Jost', sans-serif; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer; transition: background 0.3s; margin-top: 0.5rem; }
+  .form-submit { width: 100%; background: var(--navy); color: #fff; border: none; padding: 1rem; font-family: 'Jost', sans-serif; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer; transition: background 0.3s; margin-top: 0.5rem; touch-action: manipulation; }
   .form-submit:hover { background: var(--gold); color: var(--navy); }
 
-  /* ── FOOTER ── */
+  /* ===================== FOOTER ===================== */
   footer { background: var(--navy); padding: 5rem 5vw 2rem; border-top: 1px solid rgba(196,163,90,0.15); }
   .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 4vw; margin-bottom: 4rem; }
   .footer-brand-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; color: #fff; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.3rem; }
@@ -487,11 +615,9 @@ nav.scrolled {
   .footer-credit { font-size: 0.62rem; color: rgba(255,255,255,0.25); letter-spacing: 0.05em; }
   .footer-credit a { color: var(--gold); text-decoration: none; opacity: 0.7; transition: opacity 0.3s; }
   .footer-credit a:hover { opacity: 1; }
-
-  /* Footer logo image */
   .footer-logo-img { width: 48px; height: 48px; object-fit: contain; border-radius: 50%; border: 1px solid rgba(196,163,90,0.3); margin-bottom: 0.8rem; display: block; }
 
-  /* ── SCROLL REVEAL ── */
+  /* ===================== SCROLL REVEAL ===================== */
   .reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.85s cubic-bezier(0.25, 1, 0.5, 1), transform 0.85s cubic-bezier(0.25, 1, 0.5, 1); }
   .reveal.visible { opacity: 1; transform: translateY(0); }
   .reveal-delay-1 { transition-delay: 0.1s; }
@@ -499,52 +625,180 @@ nav.scrolled {
   .reveal-delay-3 { transition-delay: 0.3s; }
   .reveal-delay-4 { transition-delay: 0.4s; }
 
-  /* ── RESPONSIVE ── */
+  /* =====================================================================
+     RESPONSIVE BREAKPOINTS
+  ===================================================================== */
+
+  /* ---- TABLET (max 1024px) ---- */
   @media (max-width: 1024px) {
-    .courses-track .course-card { flex: 0 0 calc(50% - 0.75rem); }
-    #about { grid-template-columns: 1fr; }
-    .about-visual { height: 380px; order: -1; }
-    .footer-grid { grid-template-columns: 1fr 1fr; gap: 3rem; }
+    nav { height: 65px; }
+
     .cert-grid { grid-template-columns: repeat(2, 1fr); }
     .placement-logos { grid-template-columns: repeat(3, 1fr); }
+    .courses-grid { grid-template-columns: repeat(2, 1fr); }
     .eligibility-grid { grid-template-columns: repeat(2, 1fr); }
     .masonry-grid { column-count: 2; }
-    .contact-grid { grid-template-columns: 1fr; }
-    .addons-inner { grid-template-columns: 1fr; }
+
+    #about { grid-template-columns: 1fr; gap: 3rem; }
+    .about-visual { height: 380px; order: -1; }
+    .about-body { max-width: 100%; }
+
+    .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .addons-inner { grid-template-columns: 1fr; gap: 3rem; }
     .addons-img { height: 320px; }
     .addons-overlay { left: 0; }
-  }
-  @media (max-width: 768px) {
-    .nav-links { display: none; }
-    .nav-toggle { display: flex; }
-    .nav-links.open { display: flex; flex-direction: column; position: fixed; top: 80px; left: 0; right: 0; background: rgba(13,27,42,0.97); padding: 2rem; gap: 1.5rem; border-bottom: 1px solid rgba(196,163,90,0.15); z-index: 999; }
-    .hero-headline { font-size: 2.4rem; }
-    .hero-panels { gap: 0.7rem; }
-    .glass-panel { min-width: 140px; padding: 0.8rem 1.2rem; }
-    .courses-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
-    .courses-track .course-card { flex: 0 0 85%; }
-    .why-timeline { grid-template-columns: 1fr; }
-    .timeline-line { display: none; }
-    .why-item-left, .why-item-right { grid-column: 1; text-align: left; padding: 0 0 2.5rem; }
-    .why-item-left .why-item-desc { margin-left: 0; }
-    .masonry-grid { column-count: 2; }
-    .eligibility-grid { grid-template-columns: 1fr 1fr; }
-    .form-row { grid-template-columns: 1fr; }
-    .footer-grid { grid-template-columns: 1fr; }
-    .gallery-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
-    .placement-logos { grid-template-columns: repeat(2, 1fr); }
-    .cert-grid { grid-template-columns: 1fr; }
+
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 3rem 5vw; }
+
     .placement-stat { gap: 3rem; }
   }
-  @media (max-width: 480px) {
-    .masonry-grid { column-count: 1; }
-    .eligibility-grid { grid-template-columns: 1fr; }
-    .hero-panels { flex-direction: column; align-items: center; }
-    .glass-panel { width: 260px; }
-    .placement-logos { grid-template-columns: repeat(2, 1fr); }
-    .placement-stat { flex-direction: column; gap: 2rem; }
+
+  /* ---- MOBILE (max 768px) ---- */
+  @media (max-width: 768px) {
+    nav { height: 62px; padding: 0 4vw; }
+    .nav-toggle { display: flex; }
+
+    /* Hero adjustments */
+    #hero {
+      padding-bottom: 3vh;
+      padding-left: 5vw;
+      padding-right: 5vw;
+      min-height: 100svh;
+    }
+    .hero-eyebrow { margin-bottom: 0.6rem; }
+    .hero-eyebrow-text { font-size: 0.52rem; letter-spacing: 0.22em; }
+    .hero-headline { font-size: clamp(1.7rem, 6.5vw, 2.6rem); max-width: 95vw; }
+    .hero-subtext { font-size: 0.65rem; letter-spacing: 0.07em; }
+    .hero-panels { margin-top: 2rem; gap: 0.5rem; }
+    .glass-panel { min-width: 0; flex: 1 1 calc(50% - 0.5rem); max-width: none; padding: 0.7rem 0.9rem; }
+    .glass-panel-value { font-size: 0.88rem; }
+
+    /* Courses */
+    #courses { padding: 5rem 4vw 4rem; }
+    .courses-header { flex-direction: column; align-items: flex-start; gap: 0.3rem; margin-bottom: 2.5rem; }
+    .courses-count { font-size: 2.8rem; }
+    .courses-grid { grid-template-columns: 1fr; gap: 1.2rem; }
+    .course-card-img { height: 260px; }
+    /* Always show body on mobile (no hover needed) */
+    .course-card-body { transform: translateY(0); }
+    .course-card-desc { opacity: 1; transform: translateY(0); }
+    .course-card-arrow { opacity: 1; }
+
+    /* Certification */
+    #certification { padding: 5rem 4vw; }
+    .cert-grid { grid-template-columns: 1fr; gap: 1rem; }
+    .cert-card { padding: 2rem 1.5rem; }
+
+    /* Add-ons */
+    #addons { padding: 5rem 4vw; }
+    .addons-inner { gap: 2.5rem; }
+    .addons-img { height: 260px; }
+
+    /* About */
+    #about { padding: 5rem 4vw; }
+    .about-visual { height: 280px; }
+    .about-img-main { width: 75%; height: 80%; }
+    .about-img-accent { width: 50%; height: 50%; }
+    .about-year-badge { width: 76px; height: 76px; }
+    .about-year-badge-num { font-size: 1.2rem; }
+    .about-stats { gap: 2rem; }
+
+    /* Eligibility */
+    #eligibility { padding: 5rem 4vw; }
+    .eligibility-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .eligibility-card { padding: 1.5rem 1rem; }
+
+    /* Why */
+    #why { padding: 5rem 4vw; }
+    .why-header { margin-bottom: 3rem; }
+    .why-timeline { grid-template-columns: 1fr; }
+    .timeline-line { display: none; }
+    .why-item-left,
+    .why-item-right { grid-column: 1; text-align: left; padding: 0 0 2.5rem; }
+    .why-item-left .why-item-desc { margin-left: 0; }
+    .why-item-empty { display: none; }
+    .why-item-desc { max-width: 100%; }
+
+    /* Placement */
+    #placement { padding: 5rem 4vw; }
+    .placement-logos { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+    .placement-logo-cell { height: 72px; padding: 0.8rem; }
+    .placement-stat { gap: 2.5rem; padding-top: 2rem; margin-top: 2.5rem; }
+
+    /* Gallery */
+    #gallery { padding: 5rem 4vw; }
+    .masonry-grid { column-count: 2; column-gap: 8px; }
+    .masonry-item { margin-bottom: 8px; }
+    .masonry-hover-icon { width: 34px; height: 34px; font-size: 1rem; }
+
+    /* Lightbox on mobile */
+    #lightboxImg { max-width: 92vw; max-height: 70vh; }
+    .lightbox-prev { left: 0.4rem; width: 40px; height: 40px; font-size: 1rem; }
+    .lightbox-next { right: 0.4rem; width: 40px; height: 40px; font-size: 1rem; }
+    .lightbox-close { top: 0.8rem; right: 0.8rem; width: 40px; height: 40px; font-size: 1.3rem; }
+
+    /* Testimonials */
+    #testimonials { padding: 5rem 4vw; }
+    .testi-card { padding: 0 4vw; }
+
+    /* Contact */
+    #contact { padding: 5rem 4vw; }
+    .contact-form-wrap { padding: 2rem 1.5rem; }
+    .form-row { grid-template-columns: 1fr; gap: 0; }
+
+    /* Footer */
+    footer { padding: 4rem 4vw 2rem; }
+    .footer-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .footer-brand-desc { max-width: 100%; }
+    .footer-bottom { flex-direction: column; text-align: center; gap: 0.6rem; }
   }
 
+  /* ---- SMALL MOBILE (max 480px) ---- */
+  @media (max-width: 480px) {
+    nav { height: 58px; }
+
+    .hero-headline { font-size: clamp(1.55rem, 7vw, 1.9rem); }
+    .hero-eyebrow-line { width: 16px; }
+    /* Stack panels 2x2 */
+    .hero-panels { gap: 0.4rem; }
+    .glass-panel { flex: 1 1 calc(50% - 0.4rem); }
+
+    .masonry-grid { column-count: 2; column-gap: 6px; }
+
+    .eligibility-grid { grid-template-columns: 1fr; }
+
+    .placement-logos { grid-template-columns: repeat(2, 1fr); }
+    .placement-stat { flex-direction: column; align-items: center; gap: 1.8rem; }
+
+    .courses-grid { grid-template-columns: 1fr; }
+    .course-card-img { height: 230px; }
+
+    .cert-grid { grid-template-columns: 1fr; }
+
+    .why-item-title { font-size: 1.4rem; }
+
+    .about-visual { height: 240px; }
+    .about-img-main { width: 78%; }
+    .about-img-accent { width: 48%; }
+  }
+
+  /* ---- VERY SMALL (max 375px) ---- */
+  @media (max-width: 375px) {
+    .hero-headline { font-size: 1.5rem; }
+    .glass-panel-value { font-size: 0.82rem; }
+    .glass-panel-label { font-size: 0.46rem; }
+    .nav-logo-main { font-size: 1.15rem; }
+    .nav-logo-sub { font-size: 0.48rem; letter-spacing: 0.2em; }
+  }
+
+  /* ---- MINIMUM 320px ---- */
+  @media (max-width: 320px) {
+    .hero-headline { font-size: 1.35rem; }
+    .glass-panel { flex: 1 1 100%; max-width: 100%; }
+    nav { padding: 0 3vw; }
+  }
+
+  /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
   }
@@ -563,22 +817,24 @@ nav.scrolled {
       <div class="nav-logo-sub">House of Development</div>
     </div>
   </div>
-  <ul class="nav-links" role="list">
-    <li><a href="#courses">Programmes</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="#placement">Placements</a></li>
-    <li><a href="#gallery">Gallery</a></li>
-    <li><a href="#testimonials">Alumni</a></li>
-    <li><a href="#contact" class="nav-cta">Enquire Now</a></li>
+
+  <ul class="nav-links" id="navLinks" role="list">
+    <li><a href="#courses" onclick="closeNav()">Programmes</a></li>
+    <li><a href="#about" onclick="closeNav()">About</a></li>
+    <li><a href="#placement" onclick="closeNav()">Placements</a></li>
+    <li><a href="#gallery" onclick="closeNav()">Gallery</a></li>
+    <li><a href="#testimonials" onclick="closeNav()">Alumni</a></li>
+    <li><a href="#contact" class="nav-cta" onclick="closeNav()">Enquire Now</a></li>
   </ul>
-  <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle menu" aria-expanded="false">
+
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" onclick="toggleNav()">
     <span></span><span></span><span></span>
   </button>
 </nav>
 
 <!-- HERO -->
 <section id="hero" aria-label="Hero section">
-  <canvas id="particles" aria-hidden="true"></canvas>
+  <canvas id="particles" aria-hidden="true" style="position:absolute;inset:0;z-index:1;pointer-events:none;"></canvas>
   <div class="hero-bg" role="img" aria-label="Teacher with children in a Montessori classroom"></div>
 
   <div class="hero-eyebrow">
@@ -591,7 +847,7 @@ nav.scrolled {
     Be a Teacher.<br>Make a Difference.<br><em>Build a Better Tomorrow.</em>
   </h1>
 
-  <p class="hero-subtext">Central Govt. Approved · Globally Recognised · 100% Placement Assistance</p>
+  <p class="hero-subtext">Central Govt. Approved &middot; Globally Recognised &middot; 100% Placement Assistance</p>
 
   <div class="hero-actions">
     <a href="#courses" class="btn-primary">Explore Programmes</a>
@@ -645,70 +901,61 @@ nav.scrolled {
     <div class="courses-count" aria-label="5 programmes">05</div>
   </div>
 
-  <div class="courses-track-wrap">
-    <div class="courses-track" id="coursesTrack">
-
-      <div class="course-card">
-        <img class="course-card-img" src="a.jpeg" alt="Diploma in Montessori and Child Education" loading="lazy">
-        <div class="course-card-body">
-          <div class="course-card-tag">Montessori · Core Programme</div>
-          <div class="course-card-title">Diploma in Montessori and Child Education</div>
-          <div class="course-card-duration">Duration: 6 Months | 1 Year | 2 Year</div>
-          <div class="course-card-desc">A comprehensive programme covering Montessori philosophy, child development, classroom preparation, and hands-on practicum. Central government approved and globally recognised.</div>
-          <div class="course-card-arrow">Enquire Now →</div>
-        </div>
+  <div class="courses-grid">
+    <div class="course-card">
+      <img class="course-card-img" src="a.jpeg" alt="Diploma in Montessori and Child Education" loading="lazy">
+      <div class="course-card-body">
+        <div class="course-card-tag">Montessori &middot; Core Programme</div>
+        <div class="course-card-title">Diploma in Montessori and Child Education</div>
+        <div class="course-card-duration">Duration: 6 Months | 1 Year | 2 Year</div>
+        <div class="course-card-desc">A comprehensive programme covering Montessori philosophy, child development, classroom preparation, and hands-on practicum. Central government approved and globally recognised.</div>
+        <div class="course-card-arrow">Enquire Now &rarr;</div>
       </div>
-
-      <div class="course-card">
-        <img class="course-card-img" src="qq.jpeg" alt="Diploma in Nursery Teacher Training" loading="lazy">
-        <div class="course-card-body">
-          <div class="course-card-tag">Early Childhood · Diploma</div>
-          <div class="course-card-title">Diploma in Nursery Teacher Training</div>
-          <div class="course-card-duration">Duration: 6 Months | 1 Year</div>
-          <div class="course-card-desc">Specialised training in early childhood education, nursery classroom management, child psychology, and age-appropriate activity planning for pre-primary settings.</div>
-          <div class="course-card-arrow">Enquire Now →</div>
-        </div>
-      </div>
-
-      <div class="course-card">
-        <img class="course-card-img" src="ii.jpeg" alt="Diploma in Primary Teacher Training" loading="lazy">
-        <div class="course-card-body">
-          <div class="course-card-tag">Primary Level · Diploma</div>
-          <div class="course-card-title">Diploma in Primary Teacher Training</div>
-          <div class="course-card-duration">Duration: 6 Months | 1 Year</div>
-          <div class="course-card-desc">Equips educators with subject knowledge, pedagogy, lesson planning, and classroom management skills for primary school children aged 6–10 years.</div>
-          <div class="course-card-arrow">Enquire Now →</div>
-        </div>
-      </div>
-
-      <div class="course-card">
-        <img class="course-card-img" src="c.jpeg" alt="Diploma in Abacus Teacher Training" loading="lazy">
-        <div class="course-card-body">
-          <div class="course-card-tag">Skill Programme · Diploma</div>
-          <div class="course-card-title">Diploma in Abacus Teacher Training</div>
-          <div class="course-card-duration">Duration: 6 Months | 1 Year</div>
-          <div class="course-card-desc">Learn to teach abacus-based mental arithmetic, a high-demand skill in schools and learning centres. Includes technique, pedagogy, and classroom implementation.</div>
-          <div class="course-card-arrow">Enquire Now →</div>
-        </div>
-      </div>
-
-      <div class="course-card">
-        <img class="course-card-img" src="pp.jpeg" alt="Diploma in Phonics Teacher Training" loading="lazy">
-        <div class="course-card-body">
-          <div class="course-card-tag">Language · Diploma</div>
-          <div class="course-card-title">Diploma in Phonics Teacher Training</div>
-          <div class="course-card-duration">Duration: 6 Months</div>
-          <div class="course-card-desc">Master the science of phonics-based reading instruction. Empowers educators to teach early literacy effectively using structured, research-backed phonics methods.</div>
-          <div class="course-card-arrow">Enquire Now →</div>
-        </div>
-      </div>
-
     </div>
-  </div>
 
-  <div class="courses-nav" aria-label="Course navigation">
-    <button class="courses-btn" id="coursePrev" aria-label="Previous course">&#8592;</button>
-    <button class="courses-btn" id="courseNext" aria-label="Next course">&#8594;</button>
+    <div class="course-card">
+      <img class="course-card-img" src="qq.jpeg" alt="Diploma in Nursery Teacher Training" loading="lazy">
+      <div class="course-card-body">
+        <div class="course-card-tag">Early Childhood &middot; Diploma</div>
+        <div class="course-card-title">Diploma in Nursery Teacher Training</div>
+        <div class="course-card-duration">Duration: 6 Months | 1 Year</div>
+        <div class="course-card-desc">Specialised training in early childhood education, nursery classroom management, child psychology, and age-appropriate activity planning for pre-primary settings.</div>
+        <div class="course-card-arrow">Enquire Now &rarr;</div>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <img class="course-card-img" src="ii.jpeg" alt="Diploma in Primary Teacher Training" loading="lazy">
+      <div class="course-card-body">
+        <div class="course-card-tag">Primary Level &middot; Diploma</div>
+        <div class="course-card-title">Diploma in Primary Teacher Training</div>
+        <div class="course-card-duration">Duration: 6 Months | 1 Year</div>
+        <div class="course-card-desc">Equips educators with subject knowledge, pedagogy, lesson planning, and classroom management skills for primary school children aged 6&ndash;10 years.</div>
+        <div class="course-card-arrow">Enquire Now &rarr;</div>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <img class="course-card-img" src="c.jpeg" alt="Diploma in Abacus Teacher Training" loading="lazy">
+      <div class="course-card-body">
+        <div class="course-card-tag">Skill Programme &middot; Diploma</div>
+        <div class="course-card-title">Diploma in Abacus Teacher Training</div>
+        <div class="course-card-duration">Duration: 6 Months | 1 Year</div>
+        <div class="course-card-desc">Learn to teach abacus-based mental arithmetic, a high-demand skill in schools and learning centres. Includes technique, pedagogy, and classroom implementation.</div>
+        <div class="course-card-arrow">Enquire Now &rarr;</div>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <img class="course-card-img" src="pp.jpeg" alt="Diploma in Phonics Teacher Training" loading="lazy">
+      <div class="course-card-body">
+        <div class="course-card-tag">Language &middot; Diploma</div>
+        <div class="course-card-title">Diploma in Phonics Teacher Training</div>
+        <div class="course-card-duration">Duration: 6 Months</div>
+        <div class="course-card-desc">Master the science of phonics-based reading instruction. Empowers educators to teach early literacy effectively using structured, research-backed phonics methods.</div>
+        <div class="course-card-arrow">Enquire Now &rarr;</div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -717,11 +964,11 @@ nav.scrolled {
   <div class="cert-header">
     <div class="section-eyebrow" style="justify-content:center;">
       <div class="section-eyebrow-line" style="background:rgba(196,163,90,0.5)"></div>
-      <div class="section-eyebrow-text">Recognition & Credentials</div>
+      <div class="section-eyebrow-text">Recognition &amp; Credentials</div>
       <div class="section-eyebrow-line" style="background:rgba(196,163,90,0.5)"></div>
     </div>
     <h2 class="cert-heading reveal" id="cert-heading">Certified. Recognised.<br><span style="font-style:italic;color:var(--gold-pale)">Globally Trusted.</span></h2>
-    <p class="cert-sub reveal reveal-delay-1">Our courses are certified and approved by central government bodies and recognised globally — opening doors to careers across India and overseas.</p>
+    <p class="cert-sub reveal reveal-delay-1">Our courses are certified and approved by central government bodies and recognised globally &mdash; opening doors to careers across India and overseas.</p>
   </div>
   <div class="cert-grid">
     <div class="cert-card reveal">
@@ -737,7 +984,7 @@ nav.scrolled {
         <img src="https://cdn-icons-png.flaticon.com/512/709/709682.png" alt="Global Recognition">
       </div>
       <div class="cert-title">Globally Recognised</div>
-      <p class="cert-desc">Brainiacs certificates are accepted by schools and institutions internationally — our alumni work in Singapore, Malaysia, Dubai, Saudi Arabia, and Oman.</p>
+      <p class="cert-desc">Brainiacs certificates are accepted by schools and institutions internationally &mdash; our alumni work in Singapore, Malaysia, Dubai, Saudi Arabia, and Oman.</p>
       <span class="cert-badge">International Recognition</span>
     </div>
     <div class="cert-card reveal reveal-delay-2">
@@ -745,7 +992,7 @@ nav.scrolled {
         <img src="https://cdn-icons-png.flaticon.com/512/3976/3976625.png" alt="Add-on Certifications">
       </div>
       <div class="cert-title">5+ Add-on Certifications</div>
-      <p class="cert-desc">Enhance your profile with specialised add-on certification courses including Storytelling, Arts & Crafts, Classroom Management, and more.</p>
+      <p class="cert-desc">Enhance your profile with specialised add-on certification courses including Storytelling, Arts &amp; Crafts, Classroom Management, and more.</p>
       <span class="cert-badge">Skill Enhancement</span>
     </div>
     <div class="cert-card reveal reveal-delay-3">
@@ -759,7 +1006,7 @@ nav.scrolled {
   </div>
 </section>
 
-<!-- ADD-ON CERTIFICATION COURSES -->
+<!-- ADD-ON -->
 <section id="addons" aria-labelledby="addons-heading">
   <div class="addons-inner">
     <div class="addons-content">
@@ -774,26 +1021,11 @@ nav.scrolled {
         Beyond your core diploma, Brainiacs equips you with highly sought-after specialisation certificates that make your teaching profile stand out in competitive school hiring.
       </p>
       <ul class="addons-list reveal reveal-delay-2" role="list">
-        <li>
-          <div class="addons-list-num" aria-hidden="true">01</div>
-          <span class="addons-list-text">Story Telling Techniques</span>
-        </li>
-        <li>
-          <div class="addons-list-num" aria-hidden="true">02</div>
-          <span class="addons-list-text">Arts &amp; Crafts Training</span>
-        </li>
-        <li>
-          <div class="addons-list-num" aria-hidden="true">03</div>
-          <span class="addons-list-text">Classroom Management</span>
-        </li>
-        <li>
-          <div class="addons-list-num" aria-hidden="true">04</div>
-          <span class="addons-list-text">Child Behaviour &amp; Psychology</span>
-        </li>
-        <li>
-          <div class="addons-list-num" aria-hidden="true">05</div>
-          <span class="addons-list-text">Teacher Skill Enhancement Program</span>
-        </li>
+        <li><div class="addons-list-num" aria-hidden="true">01</div><span class="addons-list-text">Story Telling Techniques</span></li>
+        <li><div class="addons-list-num" aria-hidden="true">02</div><span class="addons-list-text">Arts &amp; Crafts Training</span></li>
+        <li><div class="addons-list-num" aria-hidden="true">03</div><span class="addons-list-text">Classroom Management</span></li>
+        <li><div class="addons-list-num" aria-hidden="true">04</div><span class="addons-list-text">Child Behaviour &amp; Psychology</span></li>
+        <li><div class="addons-list-num" aria-hidden="true">05</div><span class="addons-list-text">Teacher Skill Enhancement Program</span></li>
       </ul>
     </div>
     <div class="addons-visual reveal reveal-delay-1">
@@ -816,7 +1048,6 @@ nav.scrolled {
       <div class="about-year-badge-label">Admissions</div>
     </div>
   </div>
-
   <div class="about-content">
     <div class="section-eyebrow">
       <div class="section-eyebrow-line" style="background:rgba(196,163,90,0.5)"></div>
@@ -863,44 +1094,32 @@ nav.scrolled {
   </div>
   <div class="eligibility-grid" role="list">
     <div class="eligibility-card reveal" role="listitem">
-      <div class="eligibility-icon">
-        <img src="https://cdn-icons-png.flaticon.com/512/2436/2436874.png" alt="10th or 12th pass students">
-      </div>
+      <div class="eligibility-icon"><img src="https://cdn-icons-png.flaticon.com/512/2436/2436874.png" alt="10th or 12th pass students"></div>
       <div class="eligibility-title">10th / 12th Pass</div>
       <p class="eligibility-desc">School pass-outs at any level can enrol. No higher education required to begin your teaching career.</p>
     </div>
     <div class="eligibility-card reveal reveal-delay-1" role="listitem">
-      <div class="eligibility-icon">
-        <img src="https://cdn-icons-png.flaticon.com/512/3976/3976625.png" alt="Degree holders">
-      </div>
+      <div class="eligibility-icon"><img src="https://cdn-icons-png.flaticon.com/512/3976/3976625.png" alt="Degree holders"></div>
       <div class="eligibility-title">Degree Holders</div>
       <p class="eligibility-desc">Graduates looking to specialise in education and unlock career opportunities in reputed schools.</p>
     </div>
     <div class="eligibility-card reveal reveal-delay-2" role="listitem">
-      <div class="eligibility-icon">
-        <img src="https://cdn-icons-png.flaticon.com/512/2436/2436654.png" alt="College students">
-      </div>
+      <div class="eligibility-icon"><img src="https://cdn-icons-png.flaticon.com/512/2436/2436654.png" alt="College students"></div>
       <div class="eligibility-title">College Students</div>
       <p class="eligibility-desc">Pursue your diploma alongside your degree. Build your professional credentials from day one.</p>
     </div>
     <div class="eligibility-card reveal reveal-delay-3" role="listitem">
-      <div class="eligibility-icon">
-        <img src="https://cdn-icons-png.flaticon.com/512/2602/2602414.png" alt="School teachers">
-      </div>
+      <div class="eligibility-icon"><img src="https://cdn-icons-png.flaticon.com/512/2602/2602414.png" alt="School teachers"></div>
       <div class="eligibility-title">School Teachers</div>
       <p class="eligibility-desc">Already teaching? Upgrade your credentials with internationally recognised Montessori specialisation.</p>
     </div>
     <div class="eligibility-card reveal reveal-delay-1" role="listitem">
-      <div class="eligibility-icon">
-        <img src="https://cdn-icons-png.flaticon.com/512/4205/4205906.png" alt="Passionate parents">
-      </div>
+      <div class="eligibility-icon"><img src="https://cdn-icons-png.flaticon.com/512/4205/4205906.png" alt="Passionate parents"></div>
       <div class="eligibility-title">Passionate Parents</div>
       <p class="eligibility-desc">Understand how children truly learn. Apply Montessori principles at home and help your child thrive.</p>
     </div>
     <div class="eligibility-card reveal reveal-delay-2" role="listitem">
-      <div class="eligibility-icon">
-        <img src="https://cdn-icons-png.flaticon.com/512/3281/3281289.png" alt="Passion for teaching">
-      </div>
+      <div class="eligibility-icon"><img src="https://cdn-icons-png.flaticon.com/512/3281/3281289.png" alt="Passion for teaching"></div>
       <div class="eligibility-title">Passion for Teaching</div>
       <p class="eligibility-desc">Anyone with a genuine love for children and education is welcome. Your enthusiasm is your qualification.</p>
     </div>
@@ -922,8 +1141,8 @@ nav.scrolled {
   <div class="why-timeline" role="list">
     <div class="why-item-left reveal" role="listitem">
       <div class="why-item-step">Phase 01</div>
-      <div class="why-item-title">Enrolment & Orientation</div>
-      <p class="why-item-desc">Choose your programme — Montessori, Nursery, Primary, Abacus, or Phonics — and join our next batch. Admissions are currently open.</p>
+      <div class="why-item-title">Enrolment &amp; Orientation</div>
+      <p class="why-item-desc">Choose your programme &mdash; Montessori, Nursery, Primary, Abacus, or Phonics &mdash; and join our next batch. Admissions are currently open.</p>
     </div>
     <div class="timeline-line" aria-hidden="true">
       <div class="timeline-line-inner">
@@ -934,7 +1153,6 @@ nav.scrolled {
       </div>
     </div>
     <div class="why-item-right why-item-empty" aria-hidden="true"></div>
-
     <div class="why-item-left why-item-empty" aria-hidden="true"></div>
     <div style="grid-column:2" aria-hidden="true"></div>
     <div class="why-item-right reveal reveal-delay-1" role="listitem">
@@ -942,7 +1160,6 @@ nav.scrolled {
       <div class="why-item-title">Hands-on Training</div>
       <p class="why-item-desc">Learn through immersive, offline classroom sessions. Handle materials, practise techniques, and receive expert guidance from experienced master trainers.</p>
     </div>
-
     <div class="why-item-left reveal reveal-delay-1" role="listitem">
       <div class="why-item-step">Phase 03</div>
       <div class="why-item-title">Certification</div>
@@ -950,13 +1167,12 @@ nav.scrolled {
     </div>
     <div style="grid-column:2" aria-hidden="true"></div>
     <div class="why-item-right why-item-empty" aria-hidden="true"></div>
-
     <div class="why-item-left why-item-empty" aria-hidden="true"></div>
     <div style="grid-column:2" aria-hidden="true"></div>
     <div class="why-item-right reveal reveal-delay-2" role="listitem">
       <div class="why-item-step">Phase 04</div>
       <div class="why-item-title">Career Launch</div>
-      <p class="why-item-desc">Our dedicated placement team connects you with reputed schools across India and overseas. 100% job placement assistance — your success is our commitment.</p>
+      <p class="why-item-desc">Our dedicated placement team connects you with reputed schools across India and overseas. 100% job placement assistance &mdash; your success is our commitment.</p>
     </div>
   </div>
 </section>
@@ -970,54 +1186,50 @@ nav.scrolled {
       <div class="section-eyebrow-line" style="background:rgba(196,163,90,0.5)"></div>
     </div>
     <h2 class="placement-heading reveal" id="placement-heading">Reputed Schools,<br><span style="font-style:italic;color:var(--gold-pale)">Across India</span></h2>
-    <p class="placement-sub reveal reveal-delay-1">Our graduates are placed in leading Montessori and primary schools across Tamil Nadu and beyond. Replace these logos with your own partner school logos when ready.</p>
+    <p class="placement-sub reveal reveal-delay-1">Our graduates are placed in leading Montessori and primary schools across Tamil Nadu and beyond.</p>
   </div>
 
   <div class="placement-logos reveal">
-    <!-- DAV School -->
     <div class="placement-logo-cell">
-      <img src="ck.png" alt="DAV Public School">
+      <img src="ck.png" alt="CK School" onerror="logoError(this,'CK School')">
+      <span class="logo-placeholder">CK School</span>
     </div>
-    <!-- Kendriya Vidyalaya -->
     <div class="placement-logo-cell">
-      <img src="john.png" alt="Kendriya Vidyalaya">
+      <img src="john.png" alt="St. John's School" onerror="logoError(this,'St. John\'s School')">
+      <span class="logo-placeholder">St. John's School</span>
     </div>
-    <!-- Delhi Public School -->
     <div class="placement-logo-cell">
-      <img src="green.png" alt="Delhi Public School">
+      <img src="green.png" alt="Green Valley School" onerror="logoError(this,'Green Valley School')">
+      <span class="logo-placeholder">Green Valley School</span>
     </div>
-    <!-- Vels Vidyashram -->
     <div class="placement-logo-cell">
-      <img src="kkkk.ico" alt="Vels Vidyashram">
+      <img src="kkkk.ico" alt="Partner School" onerror="logoError(this,'Partner School')">
+      <span class="logo-placeholder">Partner School</span>
     </div>
-    <!-- PSBB School -->
     <div class="placement-logo-cell">
-      <img src="https://psbb.org/images/logo.png" alt="PSBB School">
+      <img src="psbb.png" alt="PSBB School" onerror="logoError(this,'PSBB School')">
+      <span class="logo-placeholder">PSBB School</span>
     </div>
-    <!-- Velammal -->
     <div class="placement-logo-cell">
-      <img src="https://velammal.edu.in/wp-content/uploads/2021/03/velammal-logo.png" alt="Velammal Vidyashram">
+      <img src="logo.png" alt="Velammal Vidyashram" onerror="logoError(this,'Velammal Vidyashram')">
+      <span class="logo-placeholder">Velammal Vidyashram</span>
     </div>
-    <!-- Chettinad Vidyashram -->
     <div class="placement-logo-cell">
-      <img src="https://www.chettinadvidyashram.org/images/logo.png" alt="Chettinad Vidyashram">
+      <img src="chettinad.png" alt="Chettinad Vidyashram" onerror="logoError(this,'Chettinad Vidyashram')">
+      <span class="logo-placeholder">Chettinad Vidyashram</span>
     </div>
-    <!-- National Public School -->
     <div class="placement-logo-cell">
-      <img src="https://www.nps.edu.in/wp-content/uploads/2021/01/NPS-Logo.png" alt="National Public School">
+      <img src="nps.png" alt="National Public School" onerror="logoError(this,'National Public School')">
+      <span class="logo-placeholder">National Public School</span>
     </div>
-    <!-- SBOA School -->
     <div class="placement-logo-cell">
-      <img src="https://www.sboapublicschool.edu.in/images/logo.png" alt="SBOA School">
+      <img src="sboa.png" alt="SBOA School" onerror="logoError(this,'SBOA School')">
+      <span class="logo-placeholder">SBOA School</span>
     </div>
-    <!-- Maharishi Vidya Mandir -->
     <div class="placement-logo-cell">
-      <img src="https://mvm.edu.in/wp-content/uploads/2021/06/MVM-Logo.png" alt="Maharishi Vidya Mandir">
+      <img src="mvm.png" alt="Maharishi Vidya Mandir" onerror="logoError(this,'Maharishi Vidya Mandir')">
+      <span class="logo-placeholder">Maharishi Vidya Mandir</span>
     </div>
-  </div>
-
-  <div class="placement-note reveal reveal-delay-1">
-    <p class="placement-note-text">Our students are placed in many more reputed schools across India and overseas, including <strong>Singapore, Malaysia, Dubai, Saudi Arabia, and Oman.</strong></p>
   </div>
 
   <div class="placement-stat reveal reveal-delay-2">
@@ -1051,48 +1263,54 @@ nav.scrolled {
   </div>
 
   <div class="masonry-grid" id="masonryGrid">
-    <div class="masonry-item" data-cat="training" onclick="openLightbox(this)">
+    <div class="masonry-item" data-cat="training" data-index="0" onclick="openLightbox(0)">
       <img src="aa.jpeg" alt="Montessori training session" loading="lazy">
       <div class="masonry-hover" aria-hidden="true"><div class="masonry-hover-icon">+</div></div>
     </div>
-    <div class="masonry-item" data-cat="activities" onclick="openLightbox(this)">
+    <div class="masonry-item" data-cat="activities" data-index="1" onclick="openLightbox(1)">
       <img src="bb.jpeg" alt="Montessori classroom activities" loading="lazy">
       <div class="masonry-hover" aria-hidden="true"><div class="masonry-hover-icon">+</div></div>
     </div>
-    <div class="masonry-item" data-cat="events" onclick="openLightbox(this)">
+    <div class="masonry-item" data-cat="events" data-index="2" onclick="openLightbox(2)">
       <img src="bbbb.jpeg" alt="Graduation ceremony" loading="lazy">
       <div class="masonry-hover" aria-hidden="true"><div class="masonry-hover-icon">+</div></div>
     </div>
-    <div class="masonry-item" data-cat="training" onclick="openLightbox(this)">
+    <div class="masonry-item" data-cat="training" data-index="3" onclick="openLightbox(3)">
       <img src="ggg.jpeg" alt="Teacher training workshop" loading="lazy">
       <div class="masonry-hover" aria-hidden="true"><div class="masonry-hover-icon">+</div></div>
     </div>
-    <div class="masonry-item" data-cat="activities" onclick="openLightbox(this)">
+    <div class="masonry-item" data-cat="activities" data-index="4" onclick="openLightbox(4)">
       <img src="pp.jpeg" alt="Abacus and phonics materials" loading="lazy">
       <div class="masonry-hover" aria-hidden="true"><div class="masonry-hover-icon">+</div></div>
     </div>
-    <div class="masonry-item" data-cat="events" onclick="openLightbox(this)">
+    <div class="masonry-item" data-cat="events" data-index="5" onclick="openLightbox(5)">
       <img src="xx.jpeg" alt="Student graduation event" loading="lazy">
       <div class="masonry-hover" aria-hidden="true"><div class="masonry-hover-icon">+</div></div>
     </div>
-    <div class="masonry-item" data-cat="training" onclick="openLightbox(this)">
+    <div class="masonry-item" data-cat="training" data-index="6" onclick="openLightbox(6)">
       <img src="ii.jpeg" alt="Montessori model classroom" loading="lazy">
       <div class="masonry-hover" aria-hidden="true"><div class="masonry-hover-icon">+</div></div>
     </div>
-    <div class="masonry-item" data-cat="activities" onclick="openLightbox(this)">
+    <div class="masonry-item" data-cat="activities" data-index="7" onclick="openLightbox(7)">
       <img src="ss.jpeg" alt="Hands-on activity session" loading="lazy">
       <div class="masonry-hover" aria-hidden="true"><div class="masonry-hover-icon">+</div></div>
     </div>
-    <div class="masonry-item" data-cat="events" onclick="openLightbox(this)">
+    <div class="masonry-item" data-cat="events" data-index="8" onclick="openLightbox(8)">
       <img src="iii.jpeg" alt="Campus event" loading="lazy">
       <div class="masonry-hover" aria-hidden="true"><div class="masonry-hover-icon">+</div></div>
     </div>
   </div>
 </section>
 
+<!-- LIGHTBOX -->
 <div id="lightbox" role="dialog" aria-modal="true" aria-label="Image lightbox">
   <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close lightbox">&#215;</button>
-  <img id="lightboxImg" src="" alt="">
+  <button class="lightbox-prev" onclick="lightboxNav(-1)" aria-label="Previous image">&#8592;</button>
+  <div class="lightbox-inner" id="lightboxInner" onclick="closeLightbox()">
+    <img id="lightboxImg" src="" alt="" onclick="event.stopPropagation()">
+  </div>
+  <button class="lightbox-next" onclick="lightboxNav(1)" aria-label="Next image">&#8594;</button>
+  <div class="lightbox-counter" id="lightboxCounter"></div>
 </div>
 
 <!-- TESTIMONIALS -->
@@ -1105,25 +1323,25 @@ nav.scrolled {
     </div>
     <h2 class="testimonials-heading reveal" id="testi-heading">Heard From Our Community</h2>
   </div>
-  <div class="testi-slider" aria-roledescription="carousel">
+  <div class="testi-slider" aria-roledescription="carousel" id="testiSlider">
     <div class="testi-track" id="testiTrack">
       <div class="testi-card" role="group" aria-roledescription="slide">
         <span class="testi-quote-mark" aria-hidden="true">"</span>
-        <p class="testi-text">Brainiacs gave me more than a certificate — it gave me confidence and a completely new perspective on how children learn. The offline training was immersive and the placement support was real. I got placed within weeks of graduating.</p>
+        <p class="testi-text">Brainiacs gave me more than a certificate &mdash; it gave me confidence and a completely new perspective on how children learn. The offline training was immersive and the placement support was real. I got placed within weeks of graduating.</p>
         <div class="testi-author">Priya Lakshmi</div>
-        <div class="testi-role">Montessori Lead Teacher, Chennai · Brainiacs Graduate</div>
+        <div class="testi-role">Montessori Lead Teacher, Chennai &middot; Brainiacs Graduate</div>
       </div>
       <div class="testi-card" role="group" aria-roledescription="slide">
         <span class="testi-quote-mark" aria-hidden="true">"</span>
-        <p class="testi-text">I came as a homemaker with a passion for children. The trainers were exceptional — experienced, approachable, and deeply knowledgeable. I left as a certified Montessori educator and now run my own playschool in Cuddalore.</p>
+        <p class="testi-text">I came as a homemaker with a passion for children. The trainers were exceptional &mdash; experienced, approachable, and deeply knowledgeable. I left as a certified Montessori educator and now run my own playschool in Cuddalore.</p>
         <div class="testi-author">Kavitha Ramesh</div>
-        <div class="testi-role">Playschool Director, Cuddalore · Brainiacs Graduate</div>
+        <div class="testi-role">Playschool Director, Cuddalore &middot; Brainiacs Graduate</div>
       </div>
       <div class="testi-card" role="group" aria-roledescription="slide">
         <span class="testi-quote-mark" aria-hidden="true">"</span>
-        <p class="testi-text">The add-on certification courses were the real differentiator. Storytelling and Classroom Management especially — schools specifically mentioned these during my interviews. Brainiacs prepares you for the real world, not just theory.</p>
+        <p class="testi-text">The add-on certification courses were the real differentiator. Storytelling and Classroom Management especially &mdash; schools specifically mentioned these during my interviews. Brainiacs prepares you for the real world, not just theory.</p>
         <div class="testi-author">Anitha Sundaram</div>
-        <div class="testi-role">Primary Teacher, Bangalore · Brainiacs Graduate</div>
+        <div class="testi-role">Primary Teacher, Bangalore &middot; Brainiacs Graduate</div>
       </div>
     </div>
   </div>
@@ -1146,41 +1364,35 @@ nav.scrolled {
         Your Journey<br>Begins With<br><span style="font-style:italic; color:var(--gold)">One Call</span>
       </h2>
       <p class="contact-body reveal reveal-delay-1">
-        Speak with our admissions team to learn which programme is the right fit for you. Admission is currently open — reach out today and take the first step toward a career in education.
+        Speak with our admissions team to learn which programme is the right fit for you. Admission is currently open &mdash; reach out today and take the first step toward a career in education.
       </p>
       <div class="contact-details reveal reveal-delay-2">
         <div>
           <div class="contact-detail-label">Phone</div>
-          <div class="contact-detail-value">
-            <a href="tel:+919962028418">99620 28418</a>
-          </div>
+          <div class="contact-detail-value"><a href="tel:+919962028418">99620 28418</a></div>
         </div>
         <div>
           <div class="contact-detail-label">Address</div>
-          <div class="contact-detail-value">No.20, Gandhi Nagar,<br>Semmandalam, Cuddalore – 1</div>
+          <div class="contact-detail-value">No.20, Gandhi Nagar,<br>Semmandalam, Cuddalore &ndash; 1</div>
         </div>
         <div>
           <div class="contact-detail-label">Office Hours</div>
-          <div class="contact-detail-value">Monday – Saturday, 9:00 AM – 6:00 PM</div>
+          <div class="contact-detail-value">Monday &ndash; Saturday, 9:00 AM &ndash; 6:00 PM</div>
         </div>
         <div>
           <div class="contact-detail-label">Admission</div>
-          <div class="contact-detail-value">Currently Open — Enrol Now</div>
+          <div class="contact-detail-value">Currently Open &mdash; Enrol Now</div>
         </div>
       </div>
-
-      <!-- Google Map -->
       <iframe
         class="map-embed"
         src="https://maps.google.com/maps?q=No.20+Gandhi+Nagar+Semmandalam+Cuddalore&output=embed"
         title="Brainiacs Institutions location map"
-        allowfullscreen
-        loading="lazy"
+        allowfullscreen loading="lazy"
         referrerpolicy="no-referrer-when-downgrade"
         aria-label="Map showing Brainiacs location at No.20, Gandhi Nagar, Semmandalam, Cuddalore">
       </iframe>
     </div>
-
     <div class="contact-form-wrap reveal reveal-delay-1">
       <div class="form-row">
         <div class="form-group">
@@ -1229,7 +1441,7 @@ nav.scrolled {
 <footer>
   <div class="footer-grid">
     <div>
-      <img class="footer-logo-img" src="https://cdn-icons-png.flaticon.com/512/3976/3976625.png" alt="Brainiacs Institutions logo">
+      <img class="footer-logo-img" src="logo.png" alt="Brainiacs Institutions logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3976/3976625.png'">
       <div class="footer-brand-logo">Brainiacs Institutions</div>
       <div class="footer-brand-sub">International Montessori &amp; Teacher Training Institute</div>
       <p class="footer-brand-desc">A unit of Brainiacs Institution. Central government approved, globally recognised teacher training in Cuddalore, Tamil Nadu. 100% placement assistance. Admission open.</p>
@@ -1257,29 +1469,37 @@ nav.scrolled {
     <div>
       <div class="footer-col-title">Contact</div>
       <ul class="footer-links">
-        <li><a href="#">No.20, Gandhi Nagar,<br>Semmandalam, Cuddalore – 1</a></li>
+        <li><a href="#">No.20, Gandhi Nagar,<br>Semmandalam, Cuddalore &ndash; 1</a></li>
         <li><a href="tel:+919962028418">99620 28418</a></li>
-        <li><a href="#contact">Enquire Now →</a></li>
+        <li><a href="#contact">Enquire Now &rarr;</a></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
-    <div class="footer-bottom-left">© 2025 Brainiacs Institutions. All Rights Reserved.</div>
+    <div class="footer-bottom-left">&copy; 2025 Brainiacs Institutions. All Rights Reserved.</div>
     <div class="footer-credit">Designed &amp; Developed by <a href="https://cholanwebstudio.com" target="_blank" rel="noopener">Cholan Web Studio</a></div>
   </div>
 </footer>
 
 <script>
-/* ── PARTICLES ── */
+/* ===================== PARTICLES ===================== */
 (function() {
   const canvas = document.getElementById('particles');
+  if (!canvas) return;
   const ctx = canvas.getContext('2d');
   let W, H, particles = [];
   function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
   resize();
   window.addEventListener('resize', resize);
   for (let i = 0; i < 55; i++) {
-    particles.push({ x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight, r: Math.random() * 1.4 + 0.3, dx: (Math.random() - 0.5) * 0.3, dy: (Math.random() - 0.5) * 0.3, opacity: Math.random() * 0.5 + 0.1 });
+    particles.push({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      r: Math.random() * 1.4 + 0.3,
+      dx: (Math.random() - 0.5) * 0.3,
+      dy: (Math.random() - 0.5) * 0.3,
+      opacity: Math.random() * 0.5 + 0.1
+    });
   }
   function draw() {
     ctx.clearRect(0, 0, W, H);
@@ -1295,38 +1515,57 @@ nav.scrolled {
   draw();
 })();
 
-/* ── HERO LOAD ── */
-window.addEventListener('load', () => { document.getElementById('hero').classList.add('loaded'); });
+/* ===================== HERO LOAD ===================== */
+window.addEventListener('load', () => {
+  document.getElementById('hero').classList.add('loaded');
+});
 
-/* ── NAV SCROLL ── */
+/* ===================== NAV SCROLL ===================== */
 window.addEventListener('scroll', () => {
   document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 60);
 });
 
-/* ── SCROLL REVEAL ── */
+/* ===================== NAV TOGGLE (mobile) ===================== */
+function toggleNav() {
+  const links = document.getElementById('navLinks');
+  const toggle = document.getElementById('navToggle');
+  const isOpen = links.classList.toggle('open');
+  toggle.classList.toggle('open', isOpen);
+  toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  document.body.style.overflow = isOpen ? 'hidden' : '';
+}
+
+function closeNav() {
+  const links = document.getElementById('navLinks');
+  const toggle = document.getElementById('navToggle');
+  links.classList.remove('open');
+  toggle.classList.remove('open');
+  toggle.setAttribute('aria-expanded', 'false');
+  document.body.style.overflow = '';
+}
+
+/* Close nav if clicked outside */
+document.addEventListener('click', function(e) {
+  const nav = document.getElementById('mainNav');
+  const links = document.getElementById('navLinks');
+  if (links.classList.contains('open') && !nav.contains(e.target)) {
+    closeNav();
+  }
+});
+
+/* ===================== SCROLL REVEAL ===================== */
 const reveals = document.querySelectorAll('.reveal');
 const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
-}, { threshold: 0.12 });
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+  });
+}, { threshold: 0.1 });
 reveals.forEach(r => observer.observe(r));
 
-/* ── COURSES SLIDER ── */
-let courseIdx = 0;
-function getCardWidth() { const card = document.querySelector('.course-card'); return card ? card.offsetWidth + 24 : 0; }
-function getVisibleCards() { const w = window.innerWidth; return w < 768 ? 1 : w < 1024 ? 2 : 3; }
-function updateCourseTrack() {
-  const track = document.getElementById('coursesTrack');
-  const total = document.querySelectorAll('.course-card').length;
-  const max = Math.max(0, total - getVisibleCards());
-  courseIdx = Math.min(Math.max(courseIdx, 0), max);
-  track.style.transform = `translateX(-${courseIdx * getCardWidth()}px)`;
-}
-document.getElementById('courseNext').addEventListener('click', () => { courseIdx++; updateCourseTrack(); });
-document.getElementById('coursePrev').addEventListener('click', () => { courseIdx--; updateCourseTrack(); });
-window.addEventListener('resize', updateCourseTrack);
-
-/* ── TESTIMONIALS ── */
+/* ===================== TESTIMONIALS ===================== */
 let testiIdx = 0;
+let testiAutoPlay;
+
 function goToSlide(i) {
   testiIdx = i;
   document.getElementById('testiTrack').style.transform = `translateX(-${i * 100}%)`;
@@ -1335,43 +1574,163 @@ function goToSlide(i) {
     d.setAttribute('aria-selected', j === i ? 'true' : 'false');
   });
 }
-setInterval(() => { goToSlide((testiIdx + 1) % 3); }, 5500);
 
-/* ── GALLERY FILTER ── */
+function startTestiAutoplay() {
+  testiAutoPlay = setInterval(() => { goToSlide((testiIdx + 1) % 3); }, 5500);
+}
+
+startTestiAutoplay();
+
+/* Swipe on testimonials */
+(function() {
+  const slider = document.getElementById('testiSlider');
+  if (!slider) return;
+  let startX = 0;
+  slider.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+  slider.addEventListener('touchend', e => {
+    const diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      clearInterval(testiAutoPlay);
+      goToSlide(diff > 0 ? (testiIdx + 1) % 3 : (testiIdx - 1 + 3) % 3);
+      startTestiAutoplay();
+    }
+  }, { passive: true });
+})();
+
+/* ===================== GALLERY FILTER ===================== */
+let currentFilter = 'all';
+
 document.querySelectorAll('.filter-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    const cat = btn.dataset.cat;
+    currentFilter = btn.dataset.cat;
     document.querySelectorAll('.masonry-item').forEach(item => {
-      item.style.display = (cat === 'all' || item.dataset.cat === cat) ? 'block' : 'none';
+      item.style.display = (currentFilter === 'all' || item.dataset.cat === currentFilter) ? 'block' : 'none';
     });
+    buildVisibleList(currentFilter);
   });
 });
 
-/* ── LIGHTBOX ── */
-function openLightbox(el) {
-  const src = el.querySelector('img').src;
-  document.getElementById('lightboxImg').src = src;
-  document.getElementById('lightboxImg').alt = el.querySelector('img').alt;
-  document.getElementById('lightbox').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function closeLightbox() {
-  document.getElementById('lightbox').classList.remove('open');
-  document.body.style.overflow = '';
-}
-document.getElementById('lightbox').addEventListener('click', function(e) { if (e.target === this) closeLightbox(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+/* ===================== LIGHTBOX ===================== */
+const galleryImages = [
+  { src: 'aa.jpeg', alt: 'Montessori training session', cat: 'training' },
+  { src: 'bb.jpeg', alt: 'Montessori classroom activities', cat: 'activities' },
+  { src: 'bbbb.jpeg', alt: 'Graduation ceremony', cat: 'events' },
+  { src: 'ggg.jpeg', alt: 'Teacher training workshop', cat: 'training' },
+  { src: 'pp.jpeg', alt: 'Abacus and phonics materials', cat: 'activities' },
+  { src: 'xx.jpeg', alt: 'Student graduation event', cat: 'events' },
+  { src: 'ii.jpeg', alt: 'Montessori model classroom', cat: 'training' },
+  { src: 'ss.jpeg', alt: 'Hands-on activity session', cat: 'activities' },
+  { src: 'iii.jpeg', alt: 'Campus event', cat: 'events' }
+];
 
-/* ── PARALLAX ── */
-window.addEventListener('scroll', () => {
-  const scrollY = window.scrollY;
-  const heroBg = document.querySelector('.hero-bg');
-  if (heroBg) heroBg.style.transform = `scale(1) translateY(${scrollY * 0.25}px)`;
+let currentLbIdx = 0;
+let visibleIndices = galleryImages.map((_, i) => i);
+
+function buildVisibleList(cat) {
+  if (cat === 'all') {
+    visibleIndices = galleryImages.map((_, i) => i);
+  } else {
+    visibleIndices = galleryImages.reduce((acc, img, i) => { if (img.cat === cat) acc.push(i); return acc; }, []);
+  }
+}
+
+function openLightbox(idx) {
+  currentLbIdx = idx;
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lightboxImg');
+  const img = galleryImages[idx];
+
+  lbImg.classList.remove('lb-visible');
+  lbImg.src = img.src;
+  lbImg.alt = img.alt;
+
+  lb.classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  lbImg.onload = function() {
+    requestAnimationFrame(() => { requestAnimationFrame(() => { lbImg.classList.add('lb-visible'); }); });
+  };
+  if (lbImg.complete && lbImg.naturalWidth) {
+    requestAnimationFrame(() => { requestAnimationFrame(() => { lbImg.classList.add('lb-visible'); }); });
+  }
+
+  updateCounter();
+}
+
+function closeLightbox() {
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lightboxImg');
+  lbImg.classList.remove('lb-visible');
+  setTimeout(() => { lb.classList.remove('open'); lbImg.src = ''; document.body.style.overflow = ''; }, 350);
+}
+
+function lightboxNav(dir) {
+  let pos = visibleIndices.indexOf(currentLbIdx);
+  if (pos === -1) pos = 0;
+  pos = (pos + dir + visibleIndices.length) % visibleIndices.length;
+  const newIdx = visibleIndices[pos];
+  const lbImg = document.getElementById('lightboxImg');
+
+  lbImg.classList.remove('lb-visible');
+  setTimeout(() => {
+    currentLbIdx = newIdx;
+    const img = galleryImages[newIdx];
+    lbImg.src = img.src;
+    lbImg.alt = img.alt;
+    lbImg.onload = () => { requestAnimationFrame(() => { requestAnimationFrame(() => { lbImg.classList.add('lb-visible'); }); }); };
+    if (lbImg.complete && lbImg.naturalWidth) {
+      requestAnimationFrame(() => { requestAnimationFrame(() => { lbImg.classList.add('lb-visible'); }); });
+    }
+    updateCounter();
+  }, 260);
+}
+
+function updateCounter() {
+  const pos = visibleIndices.indexOf(currentLbIdx);
+  document.getElementById('lightboxCounter').textContent = (pos + 1) + ' / ' + visibleIndices.length;
+}
+
+/* Keyboard nav */
+document.addEventListener('keydown', e => {
+  const lb = document.getElementById('lightbox');
+  if (!lb.classList.contains('open')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft') lightboxNav(-1);
+  if (e.key === 'ArrowRight') lightboxNav(1);
 });
 
-/* ── FORM SUBMIT ── */
+/* Touch swipe for lightbox */
+(function() {
+  const inner = document.getElementById('lightboxInner');
+  if (!inner) return;
+  let startX = 0, startY = 0;
+
+  inner.addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+
+  inner.addEventListener('touchend', e => {
+    const diffX = startX - e.changedTouches[0].clientX;
+    const diffY = Math.abs(startY - e.changedTouches[0].clientY);
+    if (Math.abs(diffX) > 45 && diffY < 80) {
+      lightboxNav(diffX > 0 ? 1 : -1);
+    }
+  }, { passive: true });
+})();
+
+/* ===================== PARALLAX (desktop only) ===================== */
+if (window.matchMedia('(min-width: 769px)').matches) {
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    const heroBg = document.querySelector('.hero-bg');
+    if (heroBg) heroBg.style.transform = `scale(1) translateY(${scrollY * 0.25}px)`;
+  }, { passive: true });
+}
+
+/* ===================== FORM ===================== */
 function handleFormSubmit() {
   const name = document.getElementById('fname').value.trim();
   const phone = document.getElementById('phone').value.trim();
@@ -1379,14 +1738,18 @@ function handleFormSubmit() {
   alert('Thank you for your enquiry! Our admissions team will contact you within 24 hours.\n\nYou can also call us directly: 99620 28418');
 }
 
-/* ── NAV TOGGLE ACCESSIBILITY ── */
-const navToggle = document.querySelector('.nav-toggle');
-if (navToggle) {
-  navToggle.addEventListener('click', function() {
-    const expanded = this.getAttribute('aria-expanded') === 'true';
-    this.setAttribute('aria-expanded', !expanded);
-  });
+/* ===================== LOGO FALLBACK ===================== */
+function logoError(img, label) {
+  img.style.display = 'none';
+  const ph = img.nextElementSibling;
+  if (ph) ph.style.display = 'flex';
 }
+
+window.addEventListener('load', () => {
+  document.querySelectorAll('.placement-logo-cell img').forEach(img => {
+    if (img.complete && !img.naturalWidth) { logoError(img, img.alt); }
+  });
+});
 </script>
 </body>
 </html>
