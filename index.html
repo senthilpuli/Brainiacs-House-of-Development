@@ -298,6 +298,19 @@
   @media (max-width: 600px) {
     .courses-grid { grid-template-columns: 1fr; }
   }
+  @media (max-width: 768px) {
+  .placement-img-cell img {
+    object-fit: contain !important;
+    width: 80%;
+    height: 80%;
+    margin: auto;
+    display: block;
+  }
+
+  .placement-img-cell:hover img {
+    transform: scale(1.02);
+  }
+}
 
   .course-card {
     position: relative;
